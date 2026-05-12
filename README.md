@@ -18,6 +18,7 @@ git clone https://github.com/justfernandomalpica/mpk-project.git mi-proyecto
 cd mi-proyecto
 composer install
 composer dump-autoload
+npm install
 ```
 
 Si necesitas variables de entorno locales:
@@ -34,14 +35,50 @@ Copy-Item .env.example .env
 
 ## Ejecucion Local
 
-El servidor debe levantarse desde la carpeta `public/`:
+Levanta el servidor de PHP y el servidor de Vite con un solo comando:
 
 ```bash
-cd public
-php -S localhost:8000 router.php
+npm run dev
 ```
 
-Despues abre `http://localhost:8000` en el navegador. La ruta demo muestra una pagina simple y `http://localhost:8000/api/health` devuelve una respuesta JSON de health check.
+Este comando usa `concurrently` para ejecutar en paralelo:
+
+```bash
+npm run dev:vite
+npm run dev:php
+```
+
+El servidor PHP queda disponible en `http://localhost:8000` y Vite en `http://localhost:5173`. Abre `http://localhost:8000` en el navegador. La ruta demo muestra una pagina simple y `http://localhost:8000/api/health` devuelve una respuesta JSON de health check.
+
+Si necesitas levantar solo el servidor PHP:
+
+```bash
+npm run dev:php
+```
+
+Internamente ejecuta:
+
+```bash
+php -S localhost:8000 -t public public/router.php
+```
+
+## Assets Frontend
+
+RaccoOn usa Vite para procesar TypeScript ligero, JavaScript modular y Sass.
+
+Para compilar assets de produccion:
+
+```bash
+npm run build
+```
+
+El build genera archivos versionados en `public/build` y un manifest en `public/build/.vite/manifest.json`. Los layouts pueden cargar entradas frontend con el helper:
+
+```php
+<?= vite('resources/js/app.ts') ?>
+```
+
+Mientras Vite esta activo, RaccoOn detecta `public/build/hot` y sirve assets desde el dev server. Cuando Vite no esta activo, usa el manifest de produccion.
 
 ## Estructura
 
@@ -57,6 +94,7 @@ Despues abre `http://localhost:8000` en el navegador. La ruta demo muestra una p
 - `config/`: bootstrap, constantes, helpers, fecha/hora y configuracion de base de datos.
 - `public/`: document root del servidor web.
 - `public/assets/`: CSS, JS e imagenes publicas.
+- `resources/`: entradas frontend modernas para Vite, TypeScript y Sass.
 - `routes/`: definicion de rutas de la aplicacion.
 - `storage/`: logs, cache y archivos temporales generados en runtime.
 - `views/`: vistas HTML organizadas en `layouts/`, `pages/` y `partials/`.

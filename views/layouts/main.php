@@ -4,35 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= s($data_title ?? 'PHP MVC Scaffold') ?></title>
-    <style>
-        body {
-            margin: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            color: #1f2937;
-            background: #f8fafc;
-        }
-
-        main {
-            max-width: 720px;
-            margin: 12vh auto;
-            padding: 0 24px;
-        }
-
-        a {
-            color: #0f766e;
-        }
-
-        .status {
-            display: inline-block;
-            margin-bottom: 16px;
-            padding: 6px 10px;
-            border-radius: 6px;
-            color: #115e59;
-            background: #ccfbf1;
-            font-size: 14px;
-            font-weight: 600;
-        }
-    </style>
+    <?= vite('resources/js/app.ts') . PHP_EOL ?>
 </head>
 <body>
     <main>

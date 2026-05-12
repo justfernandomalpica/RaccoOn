@@ -41,6 +41,17 @@ function s(mixed $html): string
 }
 
 /**
+ * Render Vite asset tags for one or more frontend entrypoints.
+ *
+ * @param string|array<int, string> $entries Frontend source entrypoint path(s).
+ * @return string
+ */
+function vite(string|array $entries = 'resources/js/app.ts'): string
+{
+    return (new App\Support\Vite())->tags($entries);
+}
+
+/**
  * Print a formatted variable dump for quick local debugging.
  *
  * @param mixed $var Value to inspect.
