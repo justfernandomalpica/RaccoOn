@@ -14,7 +14,7 @@ Esta arquitectura esta pensada para sitios, APIs pequenas, prototipos funcionale
 ## Instalacion
 
 ```bash
-git clone <url-del-repositorio> mi-proyecto
+git clone https://github.com/justfernandomalpica/mpk-project.git mi-proyecto
 cd mi-proyecto
 composer install
 composer dump-autoload
