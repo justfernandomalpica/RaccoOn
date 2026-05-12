@@ -30,6 +30,17 @@ function env(string $key, mixed $default = null): mixed
 }
 
 /**
+ * Escape a value for safe HTML output.
+ *
+ * @param mixed $html Value to escape.
+ * @return string
+ */
+function s(mixed $html): string
+{
+    return htmlspecialchars((string) $html, ENT_QUOTES, 'UTF-8');
+}
+
+/**
  * Print a formatted variable dump for quick local debugging.
  *
  * @param mixed $var Value to inspect.

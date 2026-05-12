@@ -26,6 +26,18 @@ class Response
     }
 
     /**
+     * Send an HTML response and finish the current request.
+     *
+     * @param string $content HTML response content.
+     * @param int $status HTTP status code.
+     * @return void
+     */
+    public static function html(string $content, int $status = 200): void
+    {
+        self::http($content, $status, 'text/html; charset=utf-8');
+    }
+
+    /**
      * Send a formatted JSON response and finish the current request.
      *
      * @param mixed $data Payload used by the selected response format.

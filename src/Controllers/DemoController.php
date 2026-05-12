@@ -3,6 +3,9 @@
 namespace App\Controllers;
 
 use App\Http\Response;
+use App\Rendering\Partial;
+use App\Rendering\Render;
+use App\Rendering\View;
 
 /**
  * Provides the removable demo endpoints included with the scaffold.
@@ -16,41 +19,18 @@ class DemoController
      */
     public static function index(): void
     {
-        Response::http(<<<HTML
-            <!doctype html>
-            <html lang="es">
-            <head>
-                <meta charset="utf-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1">
-                <title>PHP MVC Scaffold</title>
-                <style>
-                    body {
-                        margin: 0;
-                        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-                        color: #1f2937;
-                        background: #f8fafc;
-                    }
+        $status = Render::partial(
+            (new Partial('status'))->data([
+                'message' => 'Render activo',
+            ])
+        );
 
-                    main {
-                        max-width: 720px;
-                        margin: 12vh auto;
-                        padding: 0 24px;
-                    }
+        $view = (new View('welcome'))->data([
+            'title' => 'PHP MVC Scaffold',
+            'status' => $status,
+        ]);
 
-                    a {
-                        color: #0f766e;
-                    }
-                </style>
-            </head>
-            <body>
-                <main>
-                    <h1>Scaffold activo</h1>
-                    <p>Esta pagina es una ruta demo. Puedes eliminarla junto con su ruta sin afectar el core.</p>
-                    <p><a href="/api/health">Ver health check</a></p>
-                </main>
-            </body>
-            </html>
-        HTML);
+        Response::html(Render::view(layout: 'main', view: $view));
     }
 
     /**

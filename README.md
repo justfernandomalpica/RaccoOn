@@ -114,9 +114,72 @@ class PageController
 {
     public static function about(): void
     {
-        Response::http('<h1>About</h1>');
+        Response::html('<h1>About</h1>');
     }
 }
+```
+
+## Renderizar Vistas
+
+El scaffold incluye un render simple para HTML con layouts, paginas y partials.
+
+Estructura esperada:
+
+- `views/layouts/`: layouts base.
+- `views/pages/`: vistas de pagina.
+- `views/partials/`: piezas reutilizables sin layout.
+
+Ejemplo de controlador:
+
+```php
+<?php declare(strict_types=1);
+
+namespace App\Controllers;
+
+use App\Http\Response;
+use App\Rendering\Partial;
+use App\Rendering\Render;
+use App\Rendering\View;
+
+class PageController
+{
+    public static function home(): void
+    {
+        $status = Render::partial(
+            (new Partial('status'))->data([
+                'message' => 'Render activo',
+            ])
+        );
+
+        $view = (new View('home'))->data([
+            'title' => 'Inicio',
+            'status' => $status,
+        ]);
+
+        Response::html(Render::view(layout: 'main', view: $view));
+    }
+}
+```
+
+En una vista, los datos de `View` estan disponibles con prefijo `$data_`:
+
+```php
+<h1><?= s($data_title) ?></h1>
+<?= $data_status ?>
+```
+
+En un partial, los datos de `Partial` estan disponibles con prefijo `$data_`:
+
+```php
+<span><?= s($data_message) ?></span>
+```
+
+El layout recibe el HTML de la pagina en `$content`:
+
+```php
+<main>
+    <?= $content ?>
+</main>
 ```
 
 ## Crear Un Modelo Con ActiveRecord
@@ -186,7 +249,7 @@ Opciones principales:
 
 ## Demo
 
-La ruta `/` y `/api/health` existen solo para confirmar que el scaffold arranca correctamente. Puedes eliminar `src/Controllers/DemoController.php` y sus rutas en `routes/web.php` y `routes/api.php` cuando empieces tu proyecto.
+La ruta `/` usa `App\Rendering\Render` con un layout, una vista y un partial para confirmar que el scaffold arranca correctamente. `/api/health` devuelve JSON. Puedes eliminar `src/Controllers/DemoController.php`, sus vistas demo y sus rutas en `routes/web.php` y `routes/api.php` cuando empieces tu proyecto.
 
 ## Notas
 
