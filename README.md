@@ -4,12 +4,44 @@ Plantilla PHP simple basada en MVC para iniciar proyectos pequeños sin cargar u
 
 Esta arquitectura esta pensada para sitios, APIs pequenas, prototipos funcionales, paneles internos o aplicaciones de baja complejidad. No intenta ser una solucion enterprise: es un punto de partida practico, facil de leer y facil de modificar.
 
+## Indice
+
+- [Requisitos](#requisitos)
+- [Programacion Asistida Por IA](#programacion-asistida-por-ia)
+- [Instalacion](#instalacion)
+- [Ejecucion Local](#ejecucion-local)
+- [Assets Frontend](#assets-frontend)
+- [Estructura](#estructura)
+- [Flujo De Una Peticion](#flujo-de-una-peticion)
+- [Crear Una Ruta](#crear-una-ruta)
+- [Crear Un Controlador](#crear-un-controlador)
+- [Renderizar Vistas](#renderizar-vistas)
+- [Crear Un Modelo Con ActiveRecord](#crear-un-modelo-con-activerecord)
+- [Variables De Entorno](#variables-de-entorno)
+- [Demo](#demo)
+- [Notas](#notas)
+
 ## Requisitos
 
 - PHP 8.2 o superior.
 - Composer.
+- Node.js 18 o superior, con npm incluido.
 - Extension `mysqli` si vas a usar la capa de base de datos.
 - Servidor local con el servidor integrado de PHP (`php -S`).
+
+## Programacion Asistida Por IA
+
+Este scaffold incluye instrucciones para agentes de IA generativa en [`AGENTS.md`](AGENTS.md). Ese archivo esta pensado como una guia neutral, sin configuraciones especificas de proveedor, para que cualquier agente pueda leerlo como Markdown o como archivo raw desde el repositorio.
+
+URL raw sugerida para agentes: `https://raw.githubusercontent.com/justfernandomalpica/mpk-project/main/AGENTS.md`.
+
+Prompt corto para copiar y pegar en tu chat o CLI de IA:
+
+```text
+Lee las instrucciones de RaccoOn desde https://raw.githubusercontent.com/justfernandomalpica/mpk-project/main/AGENTS.md. Despues crea un proyecto nuevo.
+```
+
+La guia explica como iniciar un proyecto nuevo, como crear rutas, controladores, vistas, endpoints JSON, partials y modelos ActiveRecord, y le indica al agente que primero lea la documentacion interna del scaffold (`README.md` + PHPDoc del codigo fuente) para adaptarse a cambios entre versiones.
 
 ## Instalacion
 
@@ -20,6 +52,8 @@ composer install
 composer dump-autoload
 npm install
 ```
+
+`composer install` instala las dependencias PHP y `npm install` instala las dependencias frontend necesarias para Vite, TypeScript y Sass.
 
 Si necesitas variables de entorno locales:
 
