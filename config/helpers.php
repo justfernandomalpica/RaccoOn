@@ -48,38 +48,6 @@ function debug(mixed $var, bool $kill = true): void
 }
 
 /**
- * Send a JSON response and finish the current request.
- *
- * @param array $data Response payload.
- * @param int $status HTTP status code.
- * @return void
- */
-function jsonRes(array $data, int $status = 200): void
-{
-    $jsonSettings = JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
-
-    http_response_code($status);
-    header('Content-Type: application/json; charset=utf-8');
-    echo json_encode($data, $jsonSettings);
-    exit;
-}
-
-/**
- * Send an HTML response and finish the current request.
- *
- * @param string $html Rendered HTML content.
- * @param int $status HTTP status code.
- * @return void
- */
-function htmlRes(string $html, int $status = 200): void
-{
-    http_response_code($status);
-    header('Content-Type: text/html; charset=utf-8');
-    echo $html;
-    exit;
-}
-
-/**
  * Start the PHP session only when it is not already active.
  *
  * @return void

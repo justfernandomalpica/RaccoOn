@@ -95,7 +95,7 @@ Los parametros llegan al controlador como arreglo:
 ```php
 public static function show(array $params): void
 {
-    Response::success(['id' => $params['id']]);
+    Response::json(['id' => $params['id']], JSON_SUCCESS);
 }
 ```
 
@@ -108,11 +108,13 @@ Crea un archivo en `src/Controllers`, por ejemplo `PageController.php`:
 
 namespace App\Controllers;
 
+use App\Http\Response;
+
 class PageController
 {
     public static function about(): void
     {
-        htmlRes('<h1>About</h1>');
+        Response::http('<h1>About</h1>');
     }
 }
 ```

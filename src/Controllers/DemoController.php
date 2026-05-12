@@ -16,7 +16,7 @@ class DemoController
      */
     public static function index(): void
     {
-        htmlRes(<<<HTML
+        Response::http(<<<HTML
             <!doctype html>
             <html lang="es">
             <head>
@@ -60,10 +60,10 @@ class DemoController
      */
     public static function health(): void
     {
-        Response::success([
+        Response::json([
             'message' => 'Application is running',
             'environment' => env('APP_ENV', 'local'),
             'timestamp' => PROJECT_DATE_TIME,
-        ]);
+        ], JSON_SUCCESS);
     }
 }

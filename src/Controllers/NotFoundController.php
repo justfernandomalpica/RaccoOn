@@ -16,6 +16,6 @@ class NotFoundController
      */
     public static function index(): void
     {
-        Response::error('The requested page or resource does not exist.', 404);
+        Response::json('The requested page or resource does not exist.', JSON_ERROR, 404);
     }
 }
