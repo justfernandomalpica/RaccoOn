@@ -2,17 +2,17 @@
 
 Plantilla PHP simple basada en MVC para iniciar proyectos pequeños sin cargar un framework completo. Esta base incluye un bootstrap claro, router propio, controladores, helpers, respuestas JSON, logger local opcional y una capa ActiveRecord ligera para proyectos que usen MySQL con `mysqli`.
 
-Esta arquitectura esta pensada para sitios, APIs pequenas, prototipos funcionales, paneles internos o aplicaciones de baja complejidad. No intenta ser una solucion enterprise: es un punto de partida practico, facil de leer y facil de modificar.
+Esta arquitectura está pensada para sitios, APIs pequeñas, prototipos funcionales, paneles internos o aplicaciones de baja complejidad. No intenta ser una solución enterprise: es un punto de partida práctico, fácil de leer y fácil de modificar.
 
-## Indice
+## Índice
 
 - [Requisitos](#requisitos)
-- [Programacion Asistida Por IA](#programacion-asistida-por-ia)
-- [Instalacion](#instalacion)
-- [Ejecucion Local](#ejecucion-local)
+- [Programación Asistida Por IA](#programación-asistida-por-ia)
+- [Instalación](#instalación)
+- [Ejecución Local](#ejecución-local)
 - [Assets Frontend](#assets-frontend)
 - [Estructura](#estructura)
-- [Flujo De Una Peticion](#flujo-de-una-peticion)
+- [Flujo De Una Petición](#flujo-de-una-petición)
 - [Crear Una Ruta](#crear-una-ruta)
 - [Crear Un Controlador](#crear-un-controlador)
 - [Renderizar Vistas](#renderizar-vistas)
@@ -26,34 +26,37 @@ Esta arquitectura esta pensada para sitios, APIs pequenas, prototipos funcionale
 - PHP 8.2 o superior.
 - Composer.
 - Node.js 18 o superior, con npm incluido.
-- Extension `mysqli` si vas a usar la capa de base de datos.
+- Extensión `mysqli` si vas a usar la capa de base de datos.
 - Servidor local con el servidor integrado de PHP (`php -S`).
 
-## Programacion Asistida Por IA
+## Programación Asistida Por IA
 
-Este scaffold incluye instrucciones para agentes de IA generativa en [`AGENTS.md`](AGENTS.md). Ese archivo esta pensado como una guia neutral, sin configuraciones especificas de proveedor, para que cualquier agente pueda leerlo como Markdown o como archivo raw desde el repositorio.
+Este scaffold incluye instrucciones para agentes de IA generativa en [`AGENTS.md`](AGENTS.md). Ese archivo está pensado como una guía neutral, sin configuraciones específicas de proveedor, para que cualquier agente pueda leerlo como Markdown o como archivo raw desde el repositorio.
 
 URL raw sugerida para agentes: `https://raw.githubusercontent.com/justfernandomalpica/mpk-project/main/AGENTS.md`.
 
 Prompt corto para copiar y pegar en tu chat o CLI de IA:
 
 ```text
-Lee las instrucciones de RaccoOn desde https://raw.githubusercontent.com/justfernandomalpica/mpk-project/main/AGENTS.md. Despues crea un proyecto nuevo.
+Lee las instrucciones de RaccoOn desde https://raw.githubusercontent.com/justfernandomalpica/mpk-project/main/AGENTS.md. Después crea un proyecto nuevo.
 ```
 
-La guia explica como iniciar un proyecto nuevo, como crear rutas, controladores, vistas, endpoints JSON, partials y modelos ActiveRecord, y le indica al agente que primero lea la documentacion interna del scaffold (`README.md` + PHPDoc del codigo fuente) para adaptarse a cambios entre versiones.
+La guía explica cómo iniciar un proyecto nuevo, cómo crear rutas, controladores, vistas, endpoints JSON, partials y modelos ActiveRecord, y le indica al agente que primero lea la documentación interna del scaffold (`README.md` + PHPDoc del código fuente) para adaptarse a cambios entre versiones.
 
-## Instalacion
+## Instalación
 
 ```bash
 git clone https://github.com/justfernandomalpica/mpk-project.git mi-proyecto
 cd mi-proyecto
+php scripts/init-project.php mi-proyecto
 composer install
 composer dump-autoload
 npm install
 ```
 
-`composer install` instala las dependencias PHP y `npm install` instala las dependencias frontend necesarias para Vite, TypeScript y Sass.
+`php scripts/init-project.php mi-proyecto` actualiza los nombres del proyecto en `composer.json`, `package.json` y `package-lock.json`. También crea `.env` desde `.env.example` cuando todavía no existe.
+
+`composer install` instala las dependencias PHP y `npm install` instala las dependencias frontend necesarias para Vite, TypeScript y Sass. Si cambiaste manualmente metadatos de dependencias, refresca los locks con `composer update --lock` y `npm install --package-lock-only`.
 
 Si necesitas variables de entorno locales:
 
@@ -67,7 +70,7 @@ En Windows PowerShell:
 Copy-Item .env.example .env
 ```
 
-## Ejecucion Local
+## Ejecución Local
 
 Levanta el servidor de PHP y el servidor de Vite con un solo comando:
 
@@ -82,15 +85,20 @@ npm run dev:vite
 npm run dev:php
 ```
 
-El servidor PHP queda disponible en `http://localhost:8000` y Vite en `http://localhost:5173`. Abre `http://localhost:8000` en el navegador. La ruta demo muestra una pagina simple y `http://localhost:8000/api/health` devuelve una respuesta JSON de health check.
+El servidor PHP queda disponible en `http://localhost:8000` y Vite en `http://localhost:5173`. Abre `http://localhost:8000` en el navegador. La ruta demo muestra una página simple y `http://localhost:8000/api/health` devuelve una respuesta JSON de health check.
 
-Si necesitas levantar solo el servidor PHP:
+Vite sirve assets para la app PHP. Si abres directamente `http://localhost:5173`, puede responder 404 en la raíz y eso es normal.
+
+Si `npm run dev` no deja activos los puertos esperados, levanta cada proceso por separado para ver el error real:
 
 ```bash
+npm run dev:vite
 npm run dev:php
 ```
 
-Internamente ejecuta:
+En entornos Windows con filesystem restringido, Vite o esbuild pueden necesitar permisos normales de lectura sobre el proyecto y sus directorios padre para cargar `vite.config.ts`. Cuando eso ocurra, prueba primero `npm run dev:vite` fuera del sandbox o con permisos de filesystem completos.
+
+El servidor PHP ejecuta internamente:
 
 ```bash
 php -S localhost:8000 -t public public/router.php
@@ -100,7 +108,7 @@ php -S localhost:8000 -t public public/router.php
 
 RaccoOn usa Vite para procesar TypeScript ligero, JavaScript modular y Sass.
 
-Para compilar assets de produccion:
+Para compilar assets de producción:
 
 ```bash
 npm run build
@@ -112,37 +120,37 @@ El build genera archivos versionados en `public/build` y un manifest en `public/
 <?= vite('resources/js/app.ts') ?>
 ```
 
-Mientras Vite esta activo, RaccoOn detecta `public/build/hot` y sirve assets desde el dev server. Cuando Vite no esta activo, usa el manifest de produccion.
+Mientras Vite está activo, RaccoOn detecta `public/build/hot` y sirve assets desde el dev server. Cuando Vite no está activo, usa el manifest de producción.
 
 ## Estructura
 
-- `src/`: codigo de aplicacion y piezas base bajo el namespace `App\`.
+- `src/`: código de aplicación y piezas base bajo el namespace `App\`.
 - `src/Controllers/`: controladores HTTP.
 - `src/Middleware/`: middleware opcional para rutas.
 - `src/Models/`: modelos de dominio o modelos ActiveRecord.
-- `src/Services/`: servicios de aplicacion.
-- `src/Routing/`: router y definicion de rutas.
+- `src/Services/`: servicios de aplicación.
+- `src/Routing/`: router y definición de rutas.
 - `src/Http/`: helpers de respuesta HTTP.
-- `src/Database/`: conexion y ActiveRecord ligero.
+- `src/Database/`: conexión y ActiveRecord ligero.
 - `src/Support/`: utilidades compartidas como el logger.
-- `config/`: bootstrap, constantes, helpers, fecha/hora y configuracion de base de datos.
+- `config/`: bootstrap, constantes, helpers, fecha/hora y configuración de base de datos.
 - `public/`: document root del servidor web.
-- `public/assets/`: CSS, JS e imagenes publicas.
+- `public/assets/`: CSS, JS e imágenes públicas.
 - `resources/`: entradas frontend modernas para Vite, TypeScript y Sass.
-- `routes/`: definicion de rutas de la aplicacion.
+- `routes/`: definición de rutas de la aplicación.
 - `storage/`: logs, cache y archivos temporales generados en runtime.
 - `views/`: vistas HTML organizadas en `layouts/`, `pages/` y `partials/`.
 - `vendor/`: dependencias instaladas por Composer.
 
-## Flujo De Una Peticion
+## Flujo De Una Petición
 
-1. `public/router.php` deja pasar archivos estaticos y envia las demas peticiones a `public/index.php`.
+1. `public/router.php` deja pasar archivos estáticos y envía las demás peticiones a `public/index.php`.
 2. `public/index.php` carga `config/app.php`.
 3. `config/app.php` registra constantes, Composer, helpers, variables `.env`, fecha/hora, logger, base de datos opcional y crea el `$router`.
 4. `public/index.php` carga `routes/web.php`.
-5. El router busca una ruta compatible con el metodo HTTP y la URI.
-6. El controlador ejecuta la accion correspondiente.
-7. La accion responde con HTML, JSON o usando `App\Http\Response`.
+5. El router busca una ruta compatible con el método HTTP y la URI.
+6. El controlador ejecuta la acción correspondiente.
+7. La acción responde con HTML, JSON o usando `App\Http\Response`.
 
 ## Crear Una Ruta
 
@@ -155,14 +163,14 @@ $router->get('/about', [PageController::class, 'about']);
 $router->post('/contact', [PageController::class, 'contact']);
 ```
 
-Las rutas pueden tener parametros:
+Las rutas pueden tener parámetros:
 
 ```php
 $router->get('/users/{id}', [UserController::class, 'show'])
     ->where('id', '\d+');
 ```
 
-Los parametros llegan al controlador como arreglo:
+Los parámetros llegan al controlador como arreglo:
 
 ```php
 public static function show(array $params): void
@@ -193,12 +201,12 @@ class PageController
 
 ## Renderizar Vistas
 
-El scaffold incluye un render simple para HTML con layouts, paginas y partials.
+El scaffold incluye un render simple para HTML con layouts, páginas y partials.
 
 Estructura esperada:
 
 - `views/layouts/`: layouts base.
-- `views/pages/`: vistas de pagina.
+- `views/pages/`: vistas de página.
 - `views/partials/`: piezas reutilizables sin layout.
 
 Ejemplo de controlador:
@@ -233,20 +241,20 @@ class PageController
 }
 ```
 
-En una vista, los datos de `View` estan disponibles con prefijo `$data_`:
+En una vista, los datos de `View` están disponibles con prefijo `$data_`:
 
 ```php
 <h1><?= s($data_title) ?></h1>
 <?= $data_status ?>
 ```
 
-En un partial, los datos de `Partial` estan disponibles con prefijo `$data_`:
+En un partial, los datos de `Partial` están disponibles con prefijo `$data_`:
 
 ```php
 <span><?= s($data_message) ?></span>
 ```
 
-El layout recibe el HTML de la pagina en `$content`:
+El layout recibe el HTML de la página en `$content`:
 
 ```php
 <main>
@@ -295,7 +303,7 @@ class User extends ActiveRecord
 }
 ```
 
-Uso basico:
+Uso básico:
 
 ```php
 $user = (new User())->sync([
@@ -313,11 +321,11 @@ El repositorio incluye `.env.example` como plantilla segura. El archivo `.env` r
 Opciones principales:
 
 - `APP_ENV`: entorno actual, por ejemplo `local` o `production`.
-- `APP_DEBUG`: bandera para uso de la aplicacion.
+- `APP_DEBUG`: bandera para uso de la aplicación.
 - `APP_TIMEZONE`: zona horaria usada por las constantes de fecha.
 - `APP_LOG_ENABLED`: habilita logs en `storage/logs`.
 - `APP_USE_DATABASE`: carga `config/database.php` y conecta ActiveRecord.
-- `APP_CORS_ENABLED`: agrega headers CORS basicos.
+- `APP_CORS_ENABLED`: agrega headers CORS básicos.
 
 ## Demo
 
@@ -325,4 +333,4 @@ La ruta `/` usa `App\Rendering\Render` con un layout, una vista y un partial par
 
 ## Notas
 
-Esta plantilla favorece claridad sobre abstraccion. Para proyectos pequenos funciona bien como base directa; para aplicaciones grandes conviene evaluar herramientas mas completas, testing formal, migraciones, validacion robusta y manejo de errores mas avanzado.
+Esta plantilla favorece claridad sobre abstracción. Para proyectos pequeños funciona bien como base directa; para aplicaciones grandes conviene evaluar herramientas más completas, testing formal, migraciones, validación robusta y manejo de errores más avanzado.

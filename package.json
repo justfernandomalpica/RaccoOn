@@ -1,11 +1,13 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "raccoon",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently -n vite,php -c cyan,green \"npm:dev:vite\" \"npm:dev:php\"",
-    "dev:vite": "vite",
+    "dev": "concurrently --names vite,php --prefix-colors cyan,green \"npm:dev:vite\" \"npm:dev:php\"",
+    "dev:vite": "vite --host localhost",
     "dev:php": "php -S localhost:8000 -t public public/router.php",
+    "init": "php scripts/init-project.php",
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"

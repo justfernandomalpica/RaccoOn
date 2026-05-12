@@ -1,5 +1,5 @@
 {
-  "name": "RaccoOn",
+  "name": "raccoon/scaffold",
   "description": "A small, framework-free PHP MVC scaffold for simple web projects.",
   "type": "project",
   "license": "MIT",

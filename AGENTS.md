@@ -31,12 +31,20 @@ Use these steps when a user asks to start a new project from RaccoOn:
 ```bash
 git clone https://github.com/justfernandomalpica/mpk-project.git my-project
 cd my-project
+php scripts/init-project.php my-project
 composer install
 composer dump-autoload
 npm install
 ```
 
 Important to ask the user the name of the project before running any script.
+
+The initializer updates `composer.json`, `package.json`, and `package-lock.json`, and creates `.env` from `.env.example` only when `.env` is missing. If project metadata was changed manually, run:
+
+```bash
+composer update --lock
+npm install --package-lock-only
+```
 
 If the project needs local environment variables:
 
@@ -56,7 +64,16 @@ For local development:
 npm run dev
 ```
 
-This starts PHP at `http://localhost:8000` and Vite at `http://localhost:5173`.
+This starts PHP at `http://localhost:8000` and Vite at `http://localhost:5173`. The main app opens at `http://localhost:8000`; Vite's root URL can return 404 because it only serves frontend assets.
+
+If `npm run dev` fails or the ports are not active, run the processes separately to expose the failing side:
+
+```bash
+npm run dev:vite
+npm run dev:php
+```
+
+On restricted Windows sandboxes, Vite/esbuild may need normal filesystem read access to load `vite.config.ts`. Prefer diagnosing with `npm run dev:vite` before changing PHP routing.
 
 ## Common Piece Maker
 
